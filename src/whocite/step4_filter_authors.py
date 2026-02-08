@@ -3,8 +3,8 @@ import csv
 from .config import config
 
 def main():
-    input_file = config.PROJECT_ROOT / "citations_analysis.csv"
-    output_file = config.PROJECT_ROOT / "high_impact_citing_authors.csv"
+    input_file = config.OUTPUT_DIR / "citations_analysis.csv"
+    output_file = config.OUTPUT_DIR / "high_impact_citing_authors.csv"
     top_n = 30
     
     print(f"Reading from {input_file}...")

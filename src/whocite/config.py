@@ -13,6 +13,11 @@ def get_project_root() -> Path:
 
 PROJECT_ROOT = get_project_root()
 WORKSPACE_ROOT = PROJECT_ROOT / "workspace"
+CONFIG_DIR = PROJECT_ROOT / "config"
+OUTPUT_DIR = PROJECT_ROOT / "output"
+
+# Ensure output directory exists
+OUTPUT_DIR.mkdir(exist_ok=True)
 
 
 class LLMSettings(BaseModel):

@@ -1,4 +1,4 @@
-# whocite
+# WhoCiteYourPapers
 
 A production-ready Python tool to analyze who is citing your research papers. It fetches citation data from Semantic Scholar, analyzes author demographics, and enriches top-tier citing authors with detailed information (current affiliation, title) using Google GenAI (Gemini) web search.
 
@@ -8,7 +8,7 @@ A production-ready Python tool to analyze who is citing your research papers. It
 -   **Author Analysis**: Aggregates statistics like H-Index and total citation counts for every citing author.
 -   **High-Impact Filtering**: Identifies top citing authors based on citation count.
 -   **AI-Powered Research**: Uses Google GenAI (Gemini 2.0 Flash) with Google Search to find up-to-date affiliations, academic titles, and profile links for high-impact authors.
--   **Merged Reporting**: Generates a final CSV report with original citation data enriched with AI-researched details.
+-   **Merged Reporting**: Generates a final CSV report `output/high_impact_citing_authors.csv` with original citation data enriched with AI-researched details.
 
 ## Prerequisites
 
@@ -33,7 +33,7 @@ A production-ready Python tool to analyze who is citing your research papers. It
 ## Configuration
 
 1.  **Semantic Scholar API**:
-    Create a file named `api key.txt` in the root directory and paste your Semantic Scholar API key inside.
+    Create a file named `semantic_scholar_api_key.txt` in the `config/` directory and paste your Semantic Scholar API key inside.
 
 2.  **Google GenAI**:
     Copy the example config:
@@ -62,6 +62,8 @@ To run the entire pipeline from fetching citations to merging researched details
 ```bash
 uv run whocite run-all --limit-research 30
 ```
+
+*All output files (JSON and CSV) will be generated in the `output/` directory.*
 
 ### Step-by-Step Execution
 
@@ -97,15 +99,21 @@ You can also run individual steps:
     uv run whocite merge
     ```
 
+## Limitations
+
+-   **Semantic Scholar Coverage**: This tool relies on the Semantic Scholar API. While extensive, its coverage may be less comprehensive than Google Scholar for some disciplines or very recent papers. Some citations found on Google Scholar might be missing here.
+-   **API Rate Limits**: The tool respects Semantic Scholar's rate limits (1 request/sec without key). Using an API key is recommended for faster processing.
+
 ## Project Structure
 
 -   `src/whocite/`: Source code package.
-    -   `cli.py`: Main CLI entry point (Click-based).
-    -   `config.py`: Configuration management.
+    -   `cli.py`: Main CLI entry point.
+    -   `config.py`: Configuration and path management.
     -   `step*.py`: Individual pipeline steps.
--   `config/`: Configuration files.
--   `pyproject.toml`: Dependency and project metadata.
+-   `config/`: Configuration files and API keys.
+-   `output/`: Generated data files (JSON/CSV).
+-   `my.bib`: Input BibTeX file (user provided).
 
 ## License
 
-[MIT](LICENSE)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

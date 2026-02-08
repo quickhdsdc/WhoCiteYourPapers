@@ -4,7 +4,7 @@ import csv
 from .config import config
 
 def load_json(filename):
-    filepath = config.PROJECT_ROOT / filename
+    filepath = config.OUTPUT_DIR / filename
     try:
         with open(filepath, "r", encoding="utf-8") as f:
             return json.load(f)
@@ -97,14 +97,14 @@ def main():
                 analysis_results.append(row)
 
     # Save to JSON
-    json_out = config.PROJECT_ROOT / "citations_analysis.json"
+    json_out = config.OUTPUT_DIR / "citations_analysis.json"
     with open(json_out, "w", encoding="utf-8") as f:
         json.dump(analysis_results, f, indent=2)
         
     # Save to CSV
     if analysis_results:
         headers = list(analysis_results[0].keys())
-        csv_out = config.PROJECT_ROOT / "citations_analysis.csv"
+        csv_out = config.OUTPUT_DIR / "citations_analysis.csv"
         with open(csv_out, "w", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=headers)
             writer.writeheader()

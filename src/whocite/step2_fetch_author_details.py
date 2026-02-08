@@ -5,12 +5,12 @@ import time
 from .config import config
 
 def load_citations(filename="citations.json"):
-    filepath = config.PROJECT_ROOT / filename
+    filepath = config.OUTPUT_DIR / filename
     with open(filepath, "r", encoding="utf-8") as f:
         return json.load(f)
 
-def load_api_key(filename="api key.txt"):
-    filepath = config.PROJECT_ROOT / filename
+def load_api_key(filename="semantic_scholar_api_key.txt"):
+    filepath = config.CONFIG_DIR / filename
     try:
         with open(filepath, "r") as f:
             return f.read().strip()
@@ -86,7 +86,7 @@ def main():
     print(f"Successfully fetched details for {len(author_map)} authors.")
     
     # Save to file
-    output_path = config.PROJECT_ROOT / "authors.json"
+    output_path = config.OUTPUT_DIR / "authors.json"
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(author_map, f, indent=2)
     print("Saved author details to authors.json")

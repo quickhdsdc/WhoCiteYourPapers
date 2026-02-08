@@ -11,14 +11,16 @@ __pycache__/
 my.bib
 citations.json
 authors.json
-citations_analysis.csv
-high_impact_citing_authors.csv
-high_impact_authors_enriched.csv
-high_impact_citing_authors_merged.csv
 
-# Config
-api key.txt
+# Config and secrets
 config/config.toml
+config/semantic_scholar_api_key.txt
+api key.txt
+
+# Output
+output/
+*.csv
+*.json
 
 # IDE
 .vscode/

@@ -6,8 +6,8 @@ import json
 
 from .config import config
 
-def load_api_key(filename="api key.txt"):
-    filepath = config.PROJECT_ROOT / filename
+def load_api_key(filename="semantic_scholar_api_key.txt"):
+    filepath = config.CONFIG_DIR / filename
     try:
         with open(filepath, "r") as f:
             return f.read().strip()
@@ -114,7 +114,7 @@ def main():
         all_papers_data.append(paper_data)
         
         # Save intermediate results
-        output_path = config.PROJECT_ROOT / "citations.json"
+        output_path = config.OUTPUT_DIR / "citations.json"
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(all_papers_data, f, indent=2)
             

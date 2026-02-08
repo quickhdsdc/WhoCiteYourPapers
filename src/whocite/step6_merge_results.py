@@ -8,7 +8,7 @@ def load_enriched_data(filename):
     """
     Loads enriched author data into a dictionary keyed by Profile OR Name.
     """
-    filepath = config.PROJECT_ROOT / filename
+    filepath = config.OUTPUT_DIR / filename
     enriched_map = {}
     try:
         with open(filepath, "r", encoding="utf-8") as f:
@@ -43,8 +43,8 @@ def main():
 
     print(f"Processing {target_file}...")
     
-    target_path = config.PROJECT_ROOT / target_file
-    output_path = config.PROJECT_ROOT / output_file
+    target_path = config.OUTPUT_DIR / target_file
+    output_path = config.OUTPUT_DIR / output_file
     
     merged_rows = []
     fieldnames = []

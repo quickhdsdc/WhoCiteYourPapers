@@ -12,7 +12,7 @@ def load_unique_authors(filename, limit=None):
     Reads the CSV and extracts unique authors based on name/profile.
     Returns a dictionary of author_key -> {name, profile, details...}
     """
-    filepath = config.PROJECT_ROOT / filename
+    filepath = config.OUTPUT_DIR / filename
     unique_authors = {}
     try:
         with open(filepath, "r", encoding="utf-8") as f:
@@ -116,8 +116,8 @@ def research_author_google(client, model, author_data):
         return ""
 
 def main(limit=None):
-    input_file = config.PROJECT_ROOT / "high_impact_citing_authors.csv"
-    output_file = config.PROJECT_ROOT / "high_impact_authors_enriched.csv"
+    input_file = config.OUTPUT_DIR / "high_impact_citing_authors.csv"
+    output_file = config.OUTPUT_DIR / "high_impact_authors_enriched.csv"
 
     authors = load_unique_authors(input_file, limit)
     print(f"Loaded {len(authors)} authors to research.")
@@ -201,7 +201,7 @@ def main(limit=None):
 def save_csv(data, filename):
     if not data: return
     keys = list(data[0].keys())
-    filepath = config.PROJECT_ROOT / filename
+    filepath = config.OUTPUT_DIR / filename
     with open(filepath, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=keys)
         writer.writeheader()
