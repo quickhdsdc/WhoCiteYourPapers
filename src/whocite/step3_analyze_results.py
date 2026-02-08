@@ -1,7 +1,10 @@
 import json
 import csv
 
-def load_json(filepath):
+from .config import config
+
+def load_json(filename):
+    filepath = config.PROJECT_ROOT / filename
     try:
         with open(filepath, "r", encoding="utf-8") as f:
             return json.load(f)
@@ -94,13 +97,15 @@ def main():
                 analysis_results.append(row)
 
     # Save to JSON
-    with open("citations_analysis.json", "w", encoding="utf-8") as f:
+    json_out = config.PROJECT_ROOT / "citations_analysis.json"
+    with open(json_out, "w", encoding="utf-8") as f:
         json.dump(analysis_results, f, indent=2)
         
     # Save to CSV
     if analysis_results:
         headers = list(analysis_results[0].keys())
-        with open("citations_analysis.csv", "w", newline="", encoding="utf-8") as f:
+        csv_out = config.PROJECT_ROOT / "citations_analysis.csv"
+        with open(csv_out, "w", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=headers)
             writer.writeheader()
             writer.writerows(analysis_results)

@@ -2,11 +2,15 @@ import json
 import requests
 import time
 
-def load_citations(filepath="citations.json"):
+from .config import config
+
+def load_citations(filename="citations.json"):
+    filepath = config.PROJECT_ROOT / filename
     with open(filepath, "r", encoding="utf-8") as f:
         return json.load(f)
 
-def load_api_key(filepath="api key.txt"):
+def load_api_key(filename="api key.txt"):
+    filepath = config.PROJECT_ROOT / filename
     try:
         with open(filepath, "r") as f:
             return f.read().strip()
@@ -82,7 +86,8 @@ def main():
     print(f"Successfully fetched details for {len(author_map)} authors.")
     
     # Save to file
-    with open("authors.json", "w", encoding="utf-8") as f:
+    output_path = config.PROJECT_ROOT / "authors.json"
+    with open(output_path, "w", encoding="utf-8") as f:
         json.dump(author_map, f, indent=2)
     print("Saved author details to authors.json")
 

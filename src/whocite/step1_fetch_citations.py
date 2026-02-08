@@ -4,7 +4,10 @@ import time
 import urllib.parse
 import json
 
-def load_api_key(filepath="api key.txt"):
+from .config import config
+
+def load_api_key(filename="api key.txt"):
+    filepath = config.PROJECT_ROOT / filename
     try:
         with open(filepath, "r") as f:
             return f.read().strip()
@@ -12,7 +15,8 @@ def load_api_key(filepath="api key.txt"):
         print(f"Warning: {filepath} not found. Proceeding without API key (rate limits may apply).")
         return None
 
-def load_papers_from_bib(bib_path="my.bib"):
+def load_papers_from_bib(filename="my.bib"):
+    bib_path = config.PROJECT_ROOT / filename
     with open(bib_path, "r", encoding="utf-8") as bibtex_file:
         bib_database = bibtexparser.load(bibtex_file)
     return bib_database.entries
@@ -110,7 +114,8 @@ def main():
         all_papers_data.append(paper_data)
         
         # Save intermediate results
-        with open("citations.json", "w", encoding="utf-8") as f:
+        output_path = config.PROJECT_ROOT / "citations.json"
+        with open(output_path, "w", encoding="utf-8") as f:
             json.dump(all_papers_data, f, indent=2)
             
         if citations:

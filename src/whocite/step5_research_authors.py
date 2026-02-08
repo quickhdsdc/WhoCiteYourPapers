@@ -5,11 +5,14 @@ import time
 import os
 
 
-def load_unique_authors(filepath, limit=None):
+from .config import config
+
+def load_unique_authors(filename, limit=None):
     """
     Reads the CSV and extracts unique authors based on name/profile.
     Returns a dictionary of author_key -> {name, profile, details...}
     """
+    filepath = config.PROJECT_ROOT / filename
     unique_authors = {}
     try:
         with open(filepath, "r", encoding="utf-8") as f:
@@ -112,17 +115,9 @@ def research_author_google(client, model, author_data):
         print(f"  Error researching {name}: {e}")
         return ""
 
-def main():
-    input_file = "high_impact_citing_authors.csv"
-    output_file = "high_impact_authors_enriched.csv"
-    
-    import sys
-    limit = None
-    if "--limit" in sys.argv:
-        try:
-            limit = int(sys.argv[sys.argv.index("--limit")+1])
-        except:
-            pass
+def main(limit=None):
+    input_file = config.PROJECT_ROOT / "high_impact_citing_authors.csv"
+    output_file = config.PROJECT_ROOT / "high_impact_authors_enriched.csv"
 
     authors = load_unique_authors(input_file, limit)
     print(f"Loaded {len(authors)} authors to research.")
@@ -130,23 +125,29 @@ def main():
     # Initialize Google Client
     try:
         from google import genai
-        # Try to load API key from config.toml manually or just rely on Env
-        # Let's try to find it in config.toml for convenience
-        import toml
-        api_key = os.environ.get("GOOGLE_API_KEY")
-        model = "gemini-2.0-flash-exp" # Default fallback
         
-        try:
-            with open("config/config.toml", "r") as f:
-                cfg = toml.load(f)
-                gemini_cfg = cfg.get("llm", {}).get("gemini", {})
-                if gemini_cfg.get("api_key"):
-                    api_key = gemini_cfg.get("api_key")
-                if gemini_cfg.get("model"):
-                    model = gemini_cfg.get("model")
-        except:
-            pass
-            
+        # Use centralized config
+        gemini_cfg = config.llm.get("gemini")
+        if not gemini_cfg:
+             # Fallback check or default?
+             # If config.llm is typed dict, access might fail if key missing?
+             # Use .get on the underlying dict if needed, or try block.
+             # config.llm returns Dict[str, LLMSettings]
+             if "gemini" in config.llm:
+                 gemini_cfg = config.llm["gemini"]
+             else:
+                 print("Warning: [llm.gemini] not found in config.")
+                 gemini_cfg = None
+
+        api_key = os.environ.get("GOOGLE_API_KEY")
+        model = "gemini-2.0-flash-exp"
+        
+        if gemini_cfg:
+            if gemini_cfg.api_key:
+                api_key = gemini_cfg.api_key
+            if gemini_cfg.model:
+                model = gemini_cfg.model
+
         if not api_key:
              print("Warning: GOOGLE_API_KEY not found in env or config/config.toml. Client init might fail.")
              
@@ -200,7 +201,8 @@ def main():
 def save_csv(data, filename):
     if not data: return
     keys = list(data[0].keys())
-    with open(filename, "w", newline="", encoding="utf-8") as f:
+    filepath = config.PROJECT_ROOT / filename
+    with open(filepath, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=keys)
         writer.writeheader()
         writer.writerows(data)

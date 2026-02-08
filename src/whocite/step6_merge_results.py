@@ -2,10 +2,13 @@ import csv
 import shutil
 import os
 
-def load_enriched_data(filepath):
+from .config import config
+
+def load_enriched_data(filename):
     """
     Loads enriched author data into a dictionary keyed by Profile OR Name.
     """
+    filepath = config.PROJECT_ROOT / filename
     enriched_map = {}
     try:
         with open(filepath, "r", encoding="utf-8") as f:
@@ -40,11 +43,14 @@ def main():
 
     print(f"Processing {target_file}...")
     
+    target_path = config.PROJECT_ROOT / target_file
+    output_path = config.PROJECT_ROOT / output_file
+    
     merged_rows = []
     fieldnames = []
     
     try:
-        with open(target_file, "r", encoding="utf-8") as f:
+        with open(target_path, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             fieldnames = list(reader.fieldnames)
             
@@ -80,7 +86,7 @@ def main():
         return
 
     # Write to new file
-    with open(output_file, "w", newline="", encoding="utf-8") as f:
+    with open(output_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(merged_rows)
@@ -89,7 +95,7 @@ def main():
     
     # Overwrite original as implied by "merge into"
     try:
-        shutil.move(output_file, target_file)
+        shutil.move(output_path, target_path)
         print(f"Overwrote {target_file} with merged data.")
     except Exception as e:
         print(f"Error overwriting file: {e}. Data is in {output_file}")

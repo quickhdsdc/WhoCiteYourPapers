@@ -1,6 +1,6 @@
-# WhoCiteYourPapers
+# whocite
 
-A Python-based toolset to analyze who is citing your research papers. It fetches citation data from Semantic Scholar, analyzes author demographics, and enriches top-tier citing authors with detailed information (current affiliation, title) using Google GenAI (Gemini) web search.
+A production-ready Python tool to analyze who is citing your research papers. It fetches citation data from Semantic Scholar, analyzes author demographics, and enriches top-tier citing authors with detailed information (current affiliation, title) using Google GenAI (Gemini) web search.
 
 ## Features
 
@@ -8,11 +8,12 @@ A Python-based toolset to analyze who is citing your research papers. It fetches
 -   **Author Analysis**: Aggregates statistics like H-Index and total citation counts for every citing author.
 -   **High-Impact Filtering**: Identifies top citing authors based on citation count.
 -   **AI-Powered Research**: Uses Google GenAI (Gemini 2.0 Flash) with Google Search to find up-to-date affiliations, academic titles, and profile links for high-impact authors.
--   **Reporting**: Generates comprehensive CSV reports (`citations_analysis.csv`, `high_impact_citing_authors.csv`).
+-   **Merged Reporting**: Generates a final CSV report with original citation data enriched with AI-researched details.
 
 ## Prerequisites
 
 -   Python 3.12+
+-   [uv](https://github.com/astral-sh/uv) (recommended for dependency management)
 -   [Semantic Scholar API Key](https://www.semanticscholar.org/product/api)
 -   [Google GenAI API Key](https://aistudio.google.com/) (for web search features)
 
@@ -24,10 +25,8 @@ A Python-based toolset to analyze who is citing your research papers. It fetches
     cd WhoCiteYourPapers
     ```
 
-2.  Install dependencies:
+2.  Sync dependencies using `uv`:
     ```bash
-    pip install -r requirements.txt
-    # OR using uv
     uv sync
     ```
 
@@ -52,59 +51,60 @@ A Python-based toolset to analyze who is citing your research papers. It fetches
 3.  **Your Papers**:
     Place your BibTeX file named `my.bib` in the root directory.
 
-## Usage Workflow
+## Usage
 
-Run the scripts in the following order to build your analysis:
+The tool provides a unified CLI `whocite`. You can run it using `uv run`.
 
-### 1. Fetch Citations
-Retrieves citation data for papers in `my.bib`.
+### Quick Start (Run Everything)
+
+To run the entire pipeline from fetching citations to merging researched details:
+
 ```bash
-python fetch_citations.py
+uv run whocite run-all --limit-research 30
 ```
 
-### 2. Fetch Author Statistics
-Gets H-Index and total citation counts for all citing authors.
-```bash
-python fetch_author_details.py
-```
+### Step-by-Step Execution
 
-### 3. Generate Analysis Report
-Combines citation and author data into a unified CSV/JSON.
-```bash
-python analyze_results.py
-```
-*Output: `citations_analysis.csv`*
+You can also run individual steps:
 
-### 4. Filter High-Impact Authors
-Extracts the top 30 authors by citation count (configurable).
-```bash
-python filter_authors.py
-```
-*Output: `high_impact_citing_authors.csv`*
+1.  **Fetch Citations**: Retrieves citation data.
+    ```bash
+    uv run whocite fetch-citations
+    ```
 
-### 5. Research Author Details (AI)
-Uses LLM + Web Search to find current affiliation and titles for the filtered authors.
-```bash
-python research_authors.py
-```
-*Output: `high_impact_authors_enriched.csv`*
+2.  **Fetch Author Details**: Gets stats from Semantic Scholar.
+    ```bash
+    uv run whocite fetch-authors
+    ```
 
-### 6. Merge Results
-Merges the researched details back into the main high-impact list.
-```bash
-python merge_research_results.py
-```
-*Final Output: `high_impact_citing_authors.csv` (updated with `Researched Name`, `Affiliation`, `Title`, `Link`)*
+3.  **Analyze Results**: Generates `citations_analysis.csv`.
+    ```bash
+    uv run whocite analyze
+    ```
+
+4.  **Filter High-Impact**: Extracts top authors.
+    ```bash
+    uv run whocite filter
+    ```
+
+5.  **Research Authors (AI)**: Researches affiliation/titles.
+    ```bash
+    uv run whocite research --limit 5
+    ```
+
+6.  **Merge Results**: Merges research back into the list.
+    ```bash
+    uv run whocite merge
+    ```
 
 ## Project Structure
 
--   `fetch_citations.py`: Interaction with Semantic Scholar Paper API.
--   `fetch_author_details.py`: Interaction with Semantic Scholar Author Batch API.
--   `analyze_results.py`: Data processing and reporting.
--   `filter_authors.py`: Filtering logic.
--   `research_authors.py`: AI agent for web research using Google GenAI.
--   `merge_research_results.py`: Data merging utility.
+-   `src/whocite/`: Source code package.
+    -   `cli.py`: Main CLI entry point (Click-based).
+    -   `config.py`: Configuration management.
+    -   `step*.py`: Individual pipeline steps.
 -   `config/`: Configuration files.
+-   `pyproject.toml`: Dependency and project metadata.
 
 ## License
 

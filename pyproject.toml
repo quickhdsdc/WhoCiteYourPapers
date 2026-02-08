@@ -1,13 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
-name = "mypub"
+name = "whocite"
 version = "0.1.0"
-description = "Add your description here"
+description = "Analyze who is citing your research papers with AI-powered author enrichment."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "bibtexparser>=1.4.4",
+    "click>=8.1.7",
     "google-genai>=1.62.0",
     "openai>=2.17.0",
     "requests>=2.32.5",
     "toml>=0.10.2",
 ]
+
+[project.scripts]
+whocite = "whocite.cli:cli"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/whocite"]
