@@ -1,0 +1,4 @@
+bibtexparser>=1.4.4
+google-genai>=1.62.0
+requests>=2.32.5
+toml>=0.10.2

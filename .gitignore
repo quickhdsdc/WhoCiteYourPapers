@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+.env
+
+# Data
+*.json
+*.csv
+my.bib
+citations.json
+authors.json
+citations_analysis.csv
+high_impact_citing_authors.csv
+high_impact_authors_enriched.csv
+high_impact_citing_authors_merged.csv
+
+# Config
+api key.txt
+config/config.toml
+
+# IDE
+.vscode/
+.idea/
