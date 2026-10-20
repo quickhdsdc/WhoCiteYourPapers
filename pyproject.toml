@@ -3,6 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
+license = { text = "LicenseRef-Dachuan-Shi-NC-1.0" }
 name = "whocite"
 version = "0.1.0"
 description = "Analyze who is citing your research papers with AI-powered author enrichment."
